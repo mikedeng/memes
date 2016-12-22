@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>		
+	</title>
+	<style>
+		.image-container {
+			display: flex;
+		}
+
+		canvas {
+			border: 5px solid yellow;
+		}
+
+		.controls {
+			width: 200px;
+			margin-left: 10px;
+			display: flex;
+			flex-direction: column;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div class="image-container">
+		<canvas id="c" width="500" height="500"></canvas>
+		<div class="controls">		
+			<input type="file" id="file"><br/>
+			<span>上方文字: </span>
+			<input id="topLineText" ><br/>
+			<span>下方文字: </span>
+			<input id="bottomLineText" ><br/>
+			<!-- <button id="saveBtn">保存</button> -->
+		</div>
+	</div>
+	<script>
+
+	function redrawMeme(imageSrc, topLineText, bottomLineText){
+		var canvas = document.querySelector('canvas');
+		var ctx    = canvas.getContext('2d');
+		ctx.drawImage(imageSrc, 0, 0, canvas.width, canvas.height);
+		ctx.font = "13pt Impact";
+		ctx.fillStyle = "black";
+
+		if(topLineText){
+			ctx.fillText(topLineText, 20, canvas.width / 5);
+		}
+
+		if(bottomLineText){
+			ctx.fillText(bottomLineText, 20, canvas.width * 4 / 5);
+		}
+	}
+
+	function saveFile(){
+		window.open(document.querySelector('canvas').toDataURL());
+	}
+
+	function handleFileSelect(evt){
+		var canvasWidth = 500;
+		var canvasHeight = 500;
+		var file = evt.target.files[0];
+
+		var reader = new FileReader();
+		reader.onload = function(fileObject){
+			var data = fileObject.target.result;
+
+			var image = new Image();
+			image.onload = function(){
+				window.imageSrc = this;
+				redrawMeme(window.imageSrc, window.topLineText, window.bottomLineText);
+			};
+
+			image.src = data;
+		}
+
+		reader.readAsDataURL(file);
+	}
+
+	function textChangeListener(evt) {
+		var id   = evt.target.id;
+		var text = evt.target.value;
+
+		if(id === 'topLineText'){
+			window.topLineText = text;
+		} else {
+			window.bottomLineText = text;
+		}
+
+		redrawMeme(window.imageSrc, window.topLineText, window.bottomLineText);
+	}
+
+	function loadDefaultImg() {
+		window.imageSrc = "imgs/xjj.jpg";
+		var image = new Image();
+		// image.setAttribute('crossOrigin', 'anonymous');
+		image.onload = function(){
+			window.imageSrc = this;
+			redrawMeme(window.imageSrc, window.topLineText, window.bottomLineText);
+		};
+
+		image.src = window.imageSrc;
+	}
+
+	window.topLineText = "";
+	window.bottomLineText = "我看好你 !";
+	var input1 = document.querySelector('#topLineText');
+	var input2 = document.querySelector('#bottomLineText');
+	input1.value   = window.topLineText;
+	input2.value   = window.bottomLineText;
+	input1.oninput = textChangeListener;
+	input2.oninput = textChangeListener;
+	document.querySelector('#file').addEventListener('change', handleFileSelect);
+	// document.querySelector('#saveBtn').addEventListener('click', saveFile, false);
+	loadDefaultImg();	
+	</script>
+</body>
+</html>
