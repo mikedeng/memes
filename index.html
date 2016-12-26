@@ -40,15 +40,16 @@
 		var canvas = document.querySelector('canvas');
 		var ctx    = canvas.getContext('2d');
 		ctx.drawImage(imageSrc, 0, 0, canvas.width, canvas.height);
-		ctx.font = "13pt Impact";
-		ctx.fillStyle = "black";
+		ctx.font = "26pt Impact";
+		ctx.textAlign = "center";
+		ctx.fillStyle = "white";
 
 		if(topLineText){
-			ctx.fillText(topLineText, 20, canvas.width / 5);
+			ctx.fillText(topLineText, canvas.width / 2, canvas.width / 5);
 		}
 
 		if(bottomLineText){
-			ctx.fillText(bottomLineText, 20, canvas.width * 4 / 5);
+			ctx.fillText(bottomLineText, canvas.width / 2, canvas.width * 4 / 5);
 		}
 	}
 
